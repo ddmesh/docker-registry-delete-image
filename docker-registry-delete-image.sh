@@ -18,7 +18,7 @@
 #
 # Requirements:
 #		linux
-#	 	sudo jq dialog curl gawk
+#	 	jq dialog curl gawk
 #
 VERSION=1
 COPYRIGHT="Stephan Enderlein 2021, GNU General Public License v3.0 or later"
