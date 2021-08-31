@@ -8,7 +8,7 @@ When using this script you do it on your own risk. I have tested it as best as I
 
 # Requirements:
 		- linux
-	 	- sudo jq dialog curl gawk
+	 	- jq dialog curl gawk
 
 # Usage
 <pre>
