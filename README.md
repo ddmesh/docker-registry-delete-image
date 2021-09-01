@@ -12,7 +12,7 @@ When using this script you do it on your own risk. I have tested it as best as I
 
 # Usage
 <pre>
-docker-registry-delete-image.sh Stephan Enderlein 2021, GNU General Public License v3.0 or later
+docker-registry-delete-image.sh Stephan Enderlein 2021, BSD 3-Clause "New" or "Revised" License 
 Deletes image in docker registry (API version 2)
 
 Usage:
