@@ -221,9 +221,6 @@ if [ -n "${AUTH_USER}" -a -n "${AUTH_PASSWORD}" ]; then
   modify_registry_url ${AUTH_USER} ${AUTH_PASSWORD}
 fi
 
-get_catalog ${REGISTRY}
-exit
-
 # get repositories
 json_repos=$(get_catalog ${REGISTRY})
 
