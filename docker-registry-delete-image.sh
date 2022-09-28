@@ -36,9 +36,10 @@
 #		linux
 #	 	jq dialog curl gawk
 #
+# docker hub is not supported, as this uses token
+# see https://docs.docker.com/docker-hub/api/latest/#tag/authentication
 
-
-VERSION=2
+VERSION=3
 COPYRIGHT="Stephan Enderlein 2021-present, BSD 3-Clause "New" or "Revised" License"
 
 REQUIREMENTS="sudo apt install jq dialog"
@@ -58,6 +59,7 @@ check_requirements()
   if [ "$error" = "1" ]; then
     echo "please install required tools:"
     echo "   ${REQUIREMENTS}"
+		echo "/etc/apt/source.list: deb http://archive.ubuntu.com/ubuntu jammy main universe restricted"
     exit 1
   fi
 }
@@ -155,19 +157,20 @@ delete_image()
 usage()
 {
 cat <<EOM
-$(basename $0) v${VERSION}, ${COPYRIGHT}
-Interactively deletes docker images from docker registry (using docker registry API version 2).
 
-Usage:
- $(basename $0) [-r <registry-url>] [-p] [-i]
-    -h  this help
-    -r  url to docker registry
-          Examples:
-            http://localhost:5000
-            https://user:password@myregistry.xy (note password might be stored
-              in command shell history)
-    -p  ask for password
-    -i  ignores https certificate check
+    $(basename $0) v${VERSION}, ${COPYRIGHT}
+    Interactively deletes docker images from docker registry (using docker registry API version 2).
+
+    Usage:
+     $(basename $0) [-r <registry-url>] [-u] [-i]
+        -h  this help
+        -r  url to docker registry
+              Examples:
+                http://localhost:5000
+                https://<user>:<password>@myregistry.xy
+                https://<user>:<password>@www.docker.com/<repository>
+        -u  ask for username and password
+        -i  ignores https certificate check
 
 EOM
 }
@@ -186,7 +189,7 @@ fi
 REGISTRY=""
 AUTH=""
 
-while getopts ":hr:pi" opt; do
+while getopts ":hr:ui" opt; do
 
   case "${opt}" in
     h)
@@ -196,7 +199,7 @@ while getopts ":hr:pi" opt; do
     r)
       REGISTRY="${OPTARG}"
       ;;
-    p)
+    u)
       read -p "username:" AUTH_USER
       read -s -p "password:" AUTH_PASSWORD
       ;;
@@ -217,6 +220,9 @@ done
 if [ -n "${AUTH_USER}" -a -n "${AUTH_PASSWORD}" ]; then
   modify_registry_url ${AUTH_USER} ${AUTH_PASSWORD}
 fi
+
+get_catalog ${REGISTRY}
+exit
 
 # get repositories
 json_repos=$(get_catalog ${REGISTRY})
